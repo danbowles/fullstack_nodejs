@@ -1,4 +1,4 @@
-Mostly TBD
+[Project brief](project_brief.md)
 
 ## Inject DB schema
 `password: postgres`
