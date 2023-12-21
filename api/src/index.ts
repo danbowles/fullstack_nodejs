@@ -19,9 +19,11 @@ app.get('/', (req, res) => {
 
 app.post('/application', db.createApplication);
 app.get('/application/:id', db.getApplication);
+app.put('/application/:id', db.updateApplication);
+app.post('/application/validate/:id', db.validateApplication);
 
 app.use(middleware.errorHandler)
 
 app.listen(port, () => {
-  return console.log(`Express is listening at http://localhost:${port}`);
+  return console.log(`🚀 Server running: http://localhost:${port}`);
 });
