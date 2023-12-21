@@ -2,7 +2,8 @@
 DROP TABLE IF EXISTS application_vehicle;
 DROP TABLE IF EXISTS application_address;
 DROP TABLE IF EXISTS application_additional_vehicle;
-DROP TABLE IF EXISTS application;
+DROP TABLE IF EXISTS application_additional_driver;
+DROP TABLE IF EXISTS application CASCADE;
 
 -- Start table Creation
 
@@ -17,7 +18,7 @@ CREATE TABLE application (
 
 CREATE TABLE application_address (
   id SERIAL PRIMARY KEY,
-  application_id INTEGER NOT NULL,
+  application_id INTEGER NOT NULL UNIQUE,
   street VARCHAR(255) NOT NULL,
   city VARCHAR(255) NOT NULL,
   state VARCHAR(2) NOT NULL,
@@ -29,7 +30,7 @@ CREATE TABLE application_address (
 CREATE TABLE application_vehicle (
   id SERIAL PRIMARY KEY,
   application_id INTEGER NOT NULL,
-  vin VARCHAR(17) UNIQUE NOT NULL,
+  vehicle_vin VARCHAR(17) UNIQUE NOT NULL,
   vehicle_year NUMERIC(4) CHECK (vehicle_year >= 1985 AND vehicle_year <= EXTRACT(YEAR FROM CURRENT_DATE) + 1),
   FOREIGN KEY (application_id) REFERENCES application(id),
   vehicle_make VARCHAR(255) NOT NULL,
