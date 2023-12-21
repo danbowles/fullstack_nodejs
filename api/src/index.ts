@@ -1,12 +1,14 @@
 import express from 'express';
 const app = express();
 const port = 3000;
+const cors = require('cors');
 const db = require('./db')
 const middleware = require('./middleware')
 
 const bodyParser = require('body-parser')
 
 app.use(bodyParser.json())
+app.use(cors())
 app.use(
   bodyParser.urlencoded({
     extended: true,
