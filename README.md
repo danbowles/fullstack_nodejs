@@ -11,13 +11,16 @@ Getting setup with the project.
 `git clone git@github.com:danbowles/fullstack_nodejs.git`
 
 ### Head into the repo's main directory and get Docker running:
-`cd ~/fullstack_nodejs`
-`docker-compose up -d`
+```
+cd ~/fullstack_nodejs
+docker-compose up -d
+```
 
 ### Setup: Database and Schema
 Once Docker has started our container, run:
-
-`psql -h localhost -U postgres application_dev -f ./database_schema.sql`
+```
+psql -h localhost -U postgres application_dev -f ./database_schema.sql
+```
 
 When Prompted, input `postgres` as the password for the user.
 
@@ -25,10 +28,10 @@ When Prompted, input `postgres` as the password for the user.
 For each, it is just two commands.  First, the API:
 
 #### Head into the API's folder from the project root and install dependencies:
-`cd api`
-
-`npm i`
-
+```
+cd api
+npm i
+```
 #### Start up the server and you'll see it running:
 `npm run dev`
 
@@ -42,10 +45,10 @@ For each, it is just two commands.  First, the API:
 ```
 
 #### Head into the `app` folder and install dependencies:
-`cd ../app`
-
-`npm i`
-
+```
+cd ../app
+npm i
+```
 #### Start up the app server and you'll see it running:
 `npm run dev`
 
@@ -72,9 +75,7 @@ After successful creation, applications are in a 'new' state and must be updated
 
 Once an application is updated, you may validate it.  After validation, you are given a quote.  If validation is attempted again, you will be given an error as your application is already valid.
 
-Subsequent updates to the application after validation
-
-This link may be used to continue an application in the future.
+Subsequent updates to the application after validation will mark the application as `incomplete` and require validation.
 ### A Note on Stretch Goals
 #### TypeScript
 While the desire to have a fully-typed (strictly) implementation would be preferred, the time was a limiting factor.  Given the time, a fully-typed API and app implementation would have been delivered.
