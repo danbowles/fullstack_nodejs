@@ -17,6 +17,11 @@ const errorStringMap: any = {
   application_vehicle_vehicle_vin_key: 'Vehicle VIN must be unique',
 }
 
+const badRequestBase = {
+  error: 'Bad Request',
+  message: 'There was something wrong with the request',
+}
+
 const tableNameMap: any = {
   application: 'Applicant',
   application_vehicle: 'Vehicle',
@@ -29,29 +34,51 @@ const errorHandler = (err: any, req: any, res: any, next: any) => {
     case "22001":
       // Note @dan: This is not the ideal way to handle a state's length being too long
       if (err.message.includes('varying(2)')) {
-        return res.status(400).send(`
-          ${tableNameMap.application_address}: value too long for State; max length 2`
-        );
+        return res.status(400).json({
+          ...badRequestBase,
+          message: `${tableNameMap.application_address}: value too long for State; max length 2`
+        });
+        // Note @dan: ^- Same here for vin length
       } else if (err.message.includes('varying(17)')) {
-        return res.status(400).send(`
-          ${tableNameMap.application_vehicle}: value too long for VIN; max length 17`
-        );
+        return res.status(400).json({
+          ...badRequestBase,
+          message: `${tableNameMap.application_vehicle}: value too long for VIN; max length 17`
+        });
       } else {
         return res.status(400).send(`An entered value was too long`);
       }
+    case "22P02":
+      // Note @dan: This is not the best way to handle a non-numeric year,
+      // as we do not get the column/table from the error
+      return res.status(400).json({
+        ...badRequestBase,
+        message: 'Expected a number for vehicle year'
+      });
     case '23502':
-      return res.status(400).send(`
-        ${tableNameMap[err.table]}: 
-        ${errorStringMap[err.column]} is required`
-      );
+      return res.status(400).json({
+        ...badRequestBase,
+        message: `${tableNameMap[err.table]}: ${errorStringMap[err.column]} is required`
+      });
     case '23505':
-      return res.status(400).send(errorStringMap[err.constraint]);
+      return res.status(400).json({
+        ...badRequestBase,
+        message: errorStringMap[err.constraint]
+      });
     case '22007':
-      return res.status(400).send(errorStringMap.invalid_datetime_format);
+      return res.status(400).json({
+        ...badRequestBase,
+        message: errorStringMap.invalid_datetime_format
+      });
     case '23514':
-      return res.status(400).send(errorStringMap[err.constraint]);
+      return res.status(400).json({
+        ...badRequestBase,
+        message: errorStringMap[err.constraint]
+      });
     default:
-      return res.status(400).send(err.message || 'An error occurred');
+      return res.status(400).json({
+        ...badRequestBase,
+        message: err.message || 'There was an error processing the request'
+      });
   }
 }
 
