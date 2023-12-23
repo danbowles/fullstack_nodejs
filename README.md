@@ -16,6 +16,7 @@ Getting setup with the project.
 
 ### Setup: Database and Schema
 Once Docker has started our container, run:
+
 `psql -h localhost -U postgres application_dev -f ./database_schema.sql`
 
 When Prompted, input `postgres` as the password for the user.
@@ -25,6 +26,7 @@ For each, it is just two commands.  First, the API:
 
 #### Head into the API's folder from the project root and install dependencies:
 `cd api`
+
 `npm i`
 
 #### Start up the server and you'll see it running:
@@ -41,6 +43,7 @@ For each, it is just two commands.  First, the API:
 
 #### Head into the `app` folder and install dependencies:
 `cd ../app`
+
 `npm i`
 
 #### Start up the app server and you'll see it running:
