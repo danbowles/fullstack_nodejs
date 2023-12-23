@@ -64,6 +64,7 @@ const createApplication = async (req: any, res: any, next: any) => {
     res.status(201).json({
       message: 'Object created successfully',
       link: `http://localhost:3000/application/${newApplicationId}`,
+      newApplicationId: newApplicationId
     });
   } catch (err: any) {
     next(err);
@@ -101,9 +102,11 @@ const getApplication = async (req: any, res: any, next: any) => {
     if (application) {
       const applicationResponse = {
         status: application.status,
-        firstName: application.first_name,
-        lastName: application.last_name,
-        dateOfBirth: application.date_of_birth,
+        applicant: {
+          firstName: application.first_name,
+          lastName: application.last_name,
+          dateOfBirth: application.date_of_birth
+        },
         address: application.street ? {
           street: application.street,
           city: application.city,
@@ -132,6 +135,17 @@ const updateApplication = async (req: any, res: any, next: any) => {
     const id = req.params.id;
     const updatedApplication = req.body;
     const { firstName, lastName, dateOfBirth } = updatedApplication;
+
+    const selectQuery = `
+    SELECT * FROM application app
+    WHERE app.id = $1`;
+
+    const result = await pool.query(selectQuery, [id]);
+    const { status } = result.rows[0] || {};
+
+    if (!updatedApplication || Object.keys(updatedApplication).length === 0 || !status) {
+      throw new Error('Application must be provided');
+    }
 
     // Begin a transaction
     await pool.query('BEGIN');
@@ -171,7 +185,15 @@ const validateApplication = async (req: any, res: any, next: any) => {
     log(application)
     const { firstName, lastName, dateOfBirth } = application;
 
-    if (!application || Object.keys(application).length === 0) {
+    // We need to see if the application exists before we can validate it
+    const selectQuery = `
+    SELECT * FROM application app
+    WHERE app.id = $1`;
+
+    const result = await pool.query(selectQuery, [id]);
+    const { status } = result.rows[0] || {};
+
+    if (!application || Object.keys(application).length === 0 || !status) {
       throw new Error('Application must be provided');
     }
 
@@ -180,11 +202,11 @@ const validateApplication = async (req: any, res: any, next: any) => {
 
     try {
       // Note @dan: We could probably skip this and have applications start as `incomplete`
-      if (application.status === 'new') {
+      if (status === 'new') {
         throw new Error('Application must be updated before it can be validated');
       }
 
-      if (application.status === 'validated') {
+      if (status === 'valid') {
         throw new Error('Application has already been validated');
       }
 
