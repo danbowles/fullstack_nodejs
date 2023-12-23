@@ -11,7 +11,7 @@ const VehicleFormComponents = ({ formData, onChange, handleRemoveVehicle, canRem
         <TextInput inputId="make" value={formData.make} onChange={(e) => onChange(vehicleIndex, 'make', e.target.value)} label="Make" type="text" />
       </div>
       <div className="w-full px-3 sm:w-2/5">
-        <TextInput inputId="model" value={formData.model} onChange={(e) => onChange(vehicleIndex, 'model', e.target.value)} label="Model" type="text" maxLength={2} />
+        <TextInput inputId="model" value={formData.model} onChange={(e) => onChange(vehicleIndex, 'model', e.target.value)} label="Model" type="text" />
       </div>
       <div className="w-full px-3 sm:w-3/5">
         <TextInput inputId="vin" value={formData.vin} onChange={(e) => onChange(vehicleIndex, 'vin', e.target.value)} label="Vehicle Identification Number (VIN)" type="text" maxLength={17} />

@@ -1,5 +1,3 @@
-import { log } from "console";
-
 const Pool = require('pg').Pool
 const pool = new Pool({
   user: 'postgres',
@@ -182,7 +180,6 @@ const validateApplication = async (req: any, res: any, next: any) => {
   try {
     const id = req.params.id;
     const application = req.body;
-    log(application)
     const { firstName, lastName, dateOfBirth } = application;
 
     // We need to see if the application exists before we can validate it
@@ -233,7 +230,11 @@ const validateApplication = async (req: any, res: any, next: any) => {
       );
 
       await pool.query('COMMIT');
-      res.status(200).json({ message: 'Application validated successfully' });
+
+      // Note @dan: An integration with some other API would go here for quote calculation
+      const quote = `$${Math.floor(Math.random() * 100) + 1}`
+
+      res.status(200).json({ message: `Validated! Your Quote: ${quote}` });
     } catch (err) {
       await pool.query('ROLLBACK');
       next(err);
